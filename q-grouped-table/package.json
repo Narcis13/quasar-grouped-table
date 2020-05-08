@@ -5,15 +5,15 @@
   "author": "Narcis Brindusescu <Narcis75@gmail.com>",
   "license": "MIT",
   "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"No test specified\" && exit 0"
+  },
   "repository": {
-    "type": "git",
-    "url": " https://github.com/Narcis13/quasar-grouped-table.git"
+    "type": "https://github.com/Narcis13/quasar-grouped-table.git",
+    "url": ""
   },
   "bugs": "",
   "homepage": "",
-  "dependencies": {
-    "quasar-ui-q-grouped-table": "latest"
-  },
   "engines": {
     "node": ">= 8.9.0",
     "npm": ">= 5.6.0",
