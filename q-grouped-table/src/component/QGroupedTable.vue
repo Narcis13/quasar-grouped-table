@@ -3,7 +3,7 @@
 <div class="q-pa-md">
     <q-table
       dense       
-      title="Treats!"
+      :title="title"
       :data="data"
       :columns="columns"
       :pagination.sync="pagination"
@@ -66,6 +66,7 @@
 <script>
 export default {
   name: 'QGroupedTable',
+  props:['title'],
    methods:{ 
     expand(name){
        //alert(name)

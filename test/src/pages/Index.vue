@@ -1,11 +1,16 @@
 <template>
   <q-page class="flex flex-center">
-      <q-group-table/>
+      <q-group-table title="titlu!"/>
   </q-page>
 </template>
 
 <script>
 export default {
-  name: 'PageIndex'
+  name: 'PageIndex',
+  data(){
+    return {
+      titlu:'TITLU'
+    }
+  }
 }
 </script>
