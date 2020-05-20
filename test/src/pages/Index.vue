@@ -1,29 +1,66 @@
 <template>
   <q-page class="flex flex-center">
-      <q-group-table grouped :title="niceTitle" :data="users" :columns="column_defs"/>
+      <div  class="column q-pa-lg">
+              <q-option-group
+                  v-model="group"
+                  :options="options"
+                  color="primary"
+                  inline
+              />
+              <div style="width:350px;" class="q-mt-md">
+                   Selected: {{ JSON.stringify(selected) }}
+               </div>    
+      </div>
+      <q-group-table dense dark :group-on="group" :title="niceTitle" :data="users" :columns="column_defs"  selection="single" :selected.sync="selected" @select="get_selection($event)"/>
   </q-page>
 </template>
 
 <script>
 export default {
   name: 'PageIndex',
+  methods: {
+            get_selection(selection) {
+              console.log('Date de la evenimentul selectare...',selection)
+                this.selected = selection
+            }
+  },
   data(){
     return {
+      selected:[],
+       group: 'eyecolor',
+       options: [
+          {
+            label: 'Ungrouped',
+            value: ':nothing'
+          },
+          {
+            label: 'Eye Color',
+            value: 'eyecolor'
+          },
+          {
+            label: 'Company',
+            value: 'company'
+          },
+          {
+            label: 'Gender',
+            value: 'gender'
+          }
+      ],
       niceTitle:'Employees',
       column_defs:[    
         { name: 'index', align: 'center', label: 'Index', field: 'index' },
-        { name: 'balance', label: 'Balance', field: 'balance' },
-        { name: 'eyecolor', label: 'Eye Color', field: 'eyeColor' },
-        { name: 'name', label: 'Name', field: 'name' },
-        { name: 'gender', label: 'Gender', field: 'gender' },
-        { name: 'company', label: 'Company', field: 'company' }
+        { name: 'balance', label: 'Balance', field: 'balance',align: 'center' },
+        { name: 'eyecolor', label: 'Eye Color', field: 'eyecolor',align: 'center',formatGroupHeader:(value,count)=>`Stuff with ${value} eyes (${count} people)` },
+        { name: 'name', label: 'Name', field: 'name',align: 'left' },
+        { name: 'gender', label: 'Gender', field: 'gender',align: 'center' },
+        { name: 'company', label: 'Company', field: 'company',align: 'left',formatGroupHeader:(value,count)=>`${count} people in ${value} company` }
         
         ],
       users:[
         {
           index: 0,
           balance: "$3,091.58",
-          eyeColor: "green",
+          eyecolor: "green",
           name: "Stafford Mathews",
           gender: "male",
           company: "APPLE"
@@ -31,7 +68,7 @@ export default {
         {
           index: 1,
           balance: "$3,305.95",
-          eyeColor: "brown",
+          eyecolor: "brown",
           name: "Darlene Harvey",
           gender: "female",
           company: "AMAZON"
@@ -39,7 +76,7 @@ export default {
         {
           index: 2,
           balance: "$2,943.30",
-          eyeColor: "brown",
+          eyecolor: "brown",
           name: "Rochelle Morse",
           gender: "female",
           company: "GOOGLE"
@@ -47,7 +84,7 @@ export default {
         {
           index: 3,
           balance: "$1,228.44",
-          eyeColor: "brown",
+          eyecolor: "brown",
           name: "Holloway Joseph",
           gender: "male",
           company: "GOOGLE"
@@ -55,7 +92,7 @@ export default {
         {
           index: 4,
           balance: "$3,501.66",
-          eyeColor: "green",
+          eyecolor: "green",
           name: "Leona Alford",
           gender: "female",
           company: "GOOGLE"
@@ -63,7 +100,7 @@ export default {
         {
           index: 5,
           balance: "$3,615.24",
-          eyeColor: "brown",
+          eyecolor: "brown",
           name: "Rojas Madden",
           gender: "male",
           company: "AMAZON"
@@ -71,7 +108,7 @@ export default {
         {
           index: 6,
           balance: "$1,942.56",
-          eyeColor: "blue",
+          eyecolor: "blue",
           name: "Mann Lloyd",
           gender: "male",
           company: "GOOGLE"
@@ -79,7 +116,7 @@ export default {
         {
           index: 7,
           balance: "$1,640.86",
-          eyeColor: "brown",
+          eyecolor: "brown",
           name: "Jeannine Trevino",
           gender: "female",
           company: "APPLE"
@@ -87,7 +124,7 @@ export default {
         {
           index: 8,
           balance: "$1,472.26",
-          eyeColor: "green",
+          eyecolor: "green",
           name: "Reba Sellers",
           gender: "female",
           company: "APPLE"
@@ -95,7 +132,7 @@ export default {
         {
           index: 9,
           balance: "$1,824.55",
-          eyeColor: "brown",
+          eyecolor: "brown",
           name: "Osborn Stein",
           gender: "male",
           company: "GOOGLE"
@@ -103,7 +140,7 @@ export default {
         {
           index: 10,
           balance: "$1,057.34",
-          eyeColor: "blue",
+          eyecolor: "blue",
           name: "Sarah Cantrell",
           gender: "female",
           company: "AMAZON"
@@ -111,7 +148,7 @@ export default {
         {
           index: 11,
           balance: "$1,328.18",
-          eyeColor: "blue",
+          eyecolor: "blue",
           name: "Traci Mcguire",
           gender: "female",
           company: "GOOGLE"
@@ -119,7 +156,7 @@ export default {
         {
           index: 12,
           balance: "$2,848.73",
-          eyeColor: "brown",
+          eyecolor: "brown",
           name: "Karina Rose",
           gender: "female",
           company: "GOOGLE"
@@ -127,7 +164,7 @@ export default {
         {
           index: 13,
           balance: "$1,379.99",
-          eyeColor: "green",
+          eyecolor: "green",
           name: "Caroline Lamb",
           gender: "female",
           company: "GOOGLE"
@@ -135,7 +172,7 @@ export default {
         {
           index: 14,
           balance: "$3,593.06",
-          eyeColor: "brown",
+          eyecolor: "brown",
           name: "Trudy Savage",
           gender: "female",
           company: "AMAZON"
@@ -143,7 +180,7 @@ export default {
         {
           index: 15,
           balance: "$2,207.32",
-          eyeColor: "brown",
+          eyecolor: "brown",
           name: "Elinor Burch",
           gender: "female",
           company: "GOOGLE"
@@ -151,7 +188,7 @@ export default {
         {
           index: 16,
           balance: "$1,493.05",
-          eyeColor: "green",
+          eyecolor: "green",
           name: "Walls Sawyer",
           gender: "male",
           company: "AMAZON"
@@ -159,7 +196,7 @@ export default {
         {
           index: 17,
           balance: "$3,149.86",
-          eyeColor: "blue",
+          eyecolor: "blue",
           name: "Porter Ayala",
           gender: "male",
           company: "GOOGLE"
@@ -167,7 +204,7 @@ export default {
         {
           index: 18,
           balance: "$3,773.37",
-          eyeColor: "blue",
+          eyecolor: "blue",
           name: "Mooney Frederick",
           gender: "male",
           company: "AMAZON"
