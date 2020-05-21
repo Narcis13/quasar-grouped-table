@@ -8,7 +8,7 @@
       :title="title"
       :pagination.sync="pagination"
       :columns="columns"
-      :data="data"
+      :data="groupedData"
       :selection="selection_prop"
       :selected.sync="selected_prop"
      
@@ -36,8 +36,8 @@
       <template v-slot:body="props">
         <q-tr v-show="props.row.isGroupHeader" :props="props">
         <q-td key="name" :props="props" colSpan="100%" class="text-bold ">
-            
-          <span><q-btn size="sm" color="primary" round dense  :icon="props.row.icon" @click="expand(props.row.groupByValue)"/></span>
+            <!--  :icon="props.row.icon"  -->
+          <span><q-btn size="sm" color="primary" round dense  :icon="props.row.icon" @click="expand(props.row.groupByValue,props.row)"/></span>
          {{ props.row.label }}
           </q-td>    
 
@@ -86,13 +86,109 @@ export default {
   },
   watch:{
         groupOn(newValue){
-          this.group(newValue);
+         this.toHide='__none__';
+         this.gIcon='remove';
+         this.gIconIndex=-1;
         },
         'selected_prop':function () {
             this.$emit('select',this.selected_prop)
           }
   },
+  computed:{
+       preparedData(){
+         console.log('preparedData start computing....')
+              let idx=1;
+              let table_data=[];
+              let that=this;
+               this.data.map(item=>{
+                item._idx_=idx;
+
+                if(that.toHide==="__none__")
+                {
+                  item.visible=true;
+                } else if(item[that.groupOn]==that.toHide&&that.gIcon){
+                  item.visible=!item.visible
+                }
+                  item.isGroupHeader=false;
+                  idx++;
+                  table_data.push(item);
+              });
+ console.log('preparedData stop computing....')
+              return table_data;
+
+       },
+       groupedData(){
+         console.log('groupedData start computing....')
+         let table_data=[];
+         let that=this;
+         table_data=[...this.preparedData];
+         if(this.groupOn!==":nothing"){
+              let col=this.groupOn;    
+
+              //sorting data
+              table_data.sort(
+                                function(a, b) {          
+                                    if (a[col] === b[col]) {
+                                      
+                                      return a._idx - b._idx_;
+                                    }
+                                    return a[col] > b[col] ? 1 : -1;
+                              });
+
+              // counting .... 
+              this.uniqueItems={}; 
+              let count=0;
+              let currentGroup=table_data[0][col];
+              table_data.forEach(function(item,index,array){
+                if(item[col]===currentGroup){
+                  count++;
+                }
+                else {
+                  that.uniqueItems[currentGroup]=count;
+                  currentGroup=item[col];
+                  count=1;
+                }
+              })
+              that.uniqueItems[currentGroup]=count;
+
+              // grouping...
+              let currGroup='';
+              let gColDef = this.columns.filter(obj=>{
+                return obj.name===this.groupOn
+              })
+              let icon='remove';
+              table_data.forEach(function(item,index,array){
+                  if (item[col]!==currGroup){
+
+                    array.splice(index,0,{
+                      label:gColDef[0].formatGroupHeader?gColDef[0].formatGroupHeader(item[col],that.uniqueItems[item[col]]):item[col]+' Group',
+                      isGroupHeader:true,
+                      groupByValue:item[col],
+                      _idx_:index,
+                      icon:that.gIcon?"remove":"remove"
+                    })
+                  
+                    currGroup=item[col];
+                  }
+
+              })
+
+              }
+            
+console.log('groupedData stop computing....')
+         return table_data;
+       }
+  },
    methods:{ 
+    iconName(row){
+   //  console.log('Row: ',row);
+       if(this.gIconIndex<0) {
+         return 'remove'
+       } else
+       {
+          if(row._idx_==this.gIconIndex) return this.gIcon 
+       }
+    } ,
     group(col){
 
           this.data.splice(0,Infinity,...this.ungroupedData);
@@ -107,9 +203,16 @@ export default {
           }
 
     },
-    expand(name){
-    //  console.log(name)
-     this.data.forEach(item=>{
+    expand(name,row){
+      console.log(name,row)
+      this.toHide=name;
+      if(row.icon=="remove")
+         this.gIcon="add"
+      else
+         this.gIcon="remove"   
+
+      this.gIconIndex=row._idx_;   
+    /* this.preparedData.forEach(item=>{
         if(!item.isGroupHeader&&item[this.groupOn]===name) item.visible=!item.visible
         if(item.isGroupHeader&&item.groupByValue==name){
           if(item.icon==='add') 
@@ -117,7 +220,7 @@ export default {
           else 
             item.icon='add'
         }
-      })
+      })*/
      },
      prepareData(d){
         let idx=1;
@@ -171,6 +274,7 @@ export default {
               label:gColDef[0].formatGroupHeader?gColDef[0].formatGroupHeader(item[col],that.uniqueItems[item[col]]):item[col]+' Group',
               isGroupHeader:true,
               groupByValue:item[col],
+              _idx_:index,
               icon:'remove'
             })
            
@@ -181,7 +285,7 @@ export default {
      }
   },
 mounted(){
-console.log('Mounted',this.groupOn);
+console.log('Mounted',this.preparedData,this.groupedData,this.uniqueItems);
 
 },
 created(){
@@ -197,7 +301,7 @@ created(){
             } else {
                 this.selected_prop = this.selected;
             }  
-
+/*
 this.originalData=[...this.data];
 
 this.prepareData(this.data);
@@ -209,15 +313,18 @@ if(this.groupOn!==":nothing"){
   this.sortBy(this.groupOn);
 
   this.countUnique(this.groupOn);
-  console.log(this.uniqueItems);
+
   
   this.groupBy(this.groupOn);
-  };
+  };*/
 
 },
   data () {
     return {
+      toHide:'__none__',
+      gIcon:'remove',
       selection_prop: '',
+      gIconIndex:-1,
       selected_prop: [],
       originalData:[],
       ungroupedData:[],
