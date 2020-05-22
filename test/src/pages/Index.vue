@@ -10,7 +10,7 @@
               <div style="width:350px;" class="q-ma-md">
                    Selected: {{ JSON.stringify(selected) }}
                </div>    
-               <q-btn @click="sterge">STERGE</q-btn>
+               <q-btn @click="remove">Remove first item from original data set</q-btn>
       </div>
       <q-group-table dense dark :group-on="group" :title="niceTitle" :data="users" :columns="column_defs"  selection="single" :selected.sync="selected" @select="get_selection($event)"/>
   </q-page>
@@ -21,10 +21,11 @@ export default {
   name: 'PageIndex',
   methods: {
             get_selection(selection) {
-              console.log('Date de la evenimentul selectare...',selection)
+              
                 this.selected = selection
             },
-            sterge(){
+            remove(){
+           
               this.users.shift();
             }
   },
