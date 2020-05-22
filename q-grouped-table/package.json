@@ -1,7 +1,7 @@
 {
   "name": "quasar-app-extension-q-grouped-table",
-  "version": "0.0.1",
-  "description": "A Quasar App Extension",
+  "version": "0.1.0",
+  "description": "A Quasar App Extension that deals with grouped data in QTable",
   "author": "Narcis Brindusescu <Narcis75@gmail.com>",
   "license": "MIT",
   "main": "src/index.js",

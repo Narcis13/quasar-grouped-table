@@ -11,8 +11,18 @@
       :data="table_data"
       :selection="selection_prop"
       :selected.sync="selected_prop"
+      :loading="loading"
      
     >
+      <template v-slot:loading>
+            <q-inner-loading showing color="primary" />
+      </template>
+     
+      <template v-slot:top>
+          <slot name="top" v-if="hasDefaultSlot">
+          </slot>
+      </template>
+
       <template v-slot:header="props">
         <q-tr :props="props">
           <q-th auto-width v-if="selection_prop!='none'">
@@ -63,6 +73,7 @@ export default {
   name: 'QGroupedTable',
   props:{
     title:String,
+    loading:Boolean,
     selection:String,
     grouped:{
       type:Boolean,
@@ -101,6 +112,9 @@ export default {
           }
   },
   computed:{
+      hasDefaultSlot() {
+               return this.$scopedSlots.hasOwnProperty("top");
+      },
        preparedData(){
          
               let idx=1;
@@ -136,7 +150,7 @@ export default {
             })
      },
      groupeData(){
-         
+        if(this.preparedData.length>0){ 
          this.table_data=[];
          let that=this;
          this.table_data=[...this.preparedData];
@@ -192,12 +206,12 @@ export default {
               })
 
               }
-            
+        } 
 
        }
   },
 mounted(){
-//console.log('Mounted',this.preparedData,this.groupedData,this.uniqueItems);
+console.log('Mounted',this);
 
 },
 created(){

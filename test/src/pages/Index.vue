@@ -12,7 +12,17 @@
                </div>    
                <q-btn @click="remove">Remove first item from original data set</q-btn>
       </div>
-      <q-group-table dense dark :group-on="group" :title="niceTitle" :data="users" :columns="column_defs"  selection="single" :selected.sync="selected" @select="get_selection($event)"/>
+      <q-group-table :loading="loading" dense dark :group-on="group" :title="niceTitle" :data="users" :columns="column_defs"  selection="single" :selected.sync="selected" @select="get_selection($event)">
+      <template v-slot:top>
+        <q-btn dense dark color="primary" :disable="loading" label="Add row" @click="addrow" />
+        <q-space />
+        <q-input outlined dense dark debounce="300" color="primary" v-model="filter">
+          <template v-slot:append>
+            <q-icon name="search" />
+          </template>
+        </q-input>
+      </template>
+      </q-group-table>
   </q-page>
 </template>
 
@@ -24,14 +34,27 @@ export default {
               
                 this.selected = selection
             },
+            addrow(){
+                  alert('CUSTOM TOP SLOT IS WORKING!')
+            },
             remove(){
            
               this.users.shift();
             }
   },
+  created(){
+     let that=this;
+     this.loading=true;
+     setTimeout(()=>{
+         that.users=[...that.lazyusers];
+         that.loading=false;
+     },3000)
+  },
   data(){
     return {
       selected:[],
+      loading:false,
+      filter:'',
        group: 'eyecolor',
        options: [
           {
@@ -61,7 +84,8 @@ export default {
         { name: 'company', label: 'Company', field: 'company',align: 'left',formatGroupHeader:(value,count)=>`${count} people in ${value} company` }
         
         ],
-      users:[
+        users:[],
+      lazyusers:[
         {
           index: 0,
           balance: "$3,091.58",
