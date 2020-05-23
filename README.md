@@ -14,14 +14,14 @@ QGroupedTable is a [Quasar App Extension](https://quasar.dev/app-extensions/intr
 To add this App Extension to your Quasar application, run the following (in your Quasar app folder):
 
 ```bash
-quasar ext add q-group-table
+quasar ext add q-grouped-table
 ```
 
 # Uninstall
 To remove this App Extension from your Quasar application, run the following (in your Quasar app folder):
 
 ```
-quasar ext remove q-group-table
+quasar ext remove q-grouped-table
 ```
 
 
